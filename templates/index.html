@@ -1,0 +1,148 @@
+{#<!DOCTYPE html>#}
+{#<html >#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Todo App</title>#}
+{#  {% load static %}#}
+{#  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">#}
+{#  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">#}
+{#   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">#}
+{#</head>#}
+{#<body>#}
+{#<div django-app="TaskManager">#}
+{#    <div class="container">#}
+{#            <div class="content">#}
+{#            <h1>TodoApp</h1>#}
+{#            <p class="tagline">a Django todo app</p>#}
+{##}
+{#            <form action="" method="post">#}
+{#            {% csrf_token %} <!-- csrf token for basic security -->#}
+{#                <div class="inputContainer">#}
+{#                    <input type="text" id="description" class="taskName" placeholder="What do you need to do?" name="description" required>#}
+{#                    <label for="description">Description</label>#}
+{#                </div>#}
+{#                <div class="inputContainer half last">#}
+{#                    <i class="fa fa-caret-down selectArrow"></i>#}
+{#                    <select id="category" class="taskCategory" name="category_select">#}
+{#                    <option class="disabled" value="">Choose a category</option>#}
+{#                    {% for category in categories %}#}
+{#                        <option class="" value="{{ category.name }}" name="{{ category.name }}">{{ category.name }}</option>#}
+{#                    {% endfor %}#}
+{#                    </select>#}
+{#                    <label for="category">Category</label>#}
+{#                </div>#}
+{#                <div class="inputContainer half last right">#}
+{#                    <input type="date" id="dueDate" class="taskDate" name="date">#}
+{#                    <label for="dueDate">Due Date</label>#}
+{#                </div>#}
+{#                <div class="row">#}
+{#                    <button class="taskAdd" name="taskAdd" type="submit"><i class="fa fa-plus icon"></i>Add task</button>#}
+{#                    <button class="taskDelete" name="taskDelete" formnovalidate="" type="submit" onclick="$('input#sublist').click();"><i class="fa fa-trash-o icon"></i>Delete Tasks</button>#}
+{#                </div>#}
+{#            <ul class="taskList">#}
+{#            {% for todo in todos %} <!-- django template lang - for loop -->#}
+{#                <li class="taskItem">#}
+{#                    <input type="checkbox" class="taskCheckbox" name="checkedbox" id="{{ todo.id }}" value="{{ todo.id }}">#}
+{#                    <label for="{{ todo.id }}"><span class="complete-">{{ todo.title }}</span></label>#}
+{#                    <span class="category-{{ todo.category }}">{{ todo.category }}</span>#}
+{#                    <strong class="taskDate"><i class="fa fa-calendar"></i>{{ todo.created }} - {{ todo.due_date }}</strong>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#            </ul><!-- taskList -->#}
+{#            </form>#}
+{#            </div><!-- content -->#}
+{# </div><!-- container -->#}
+{#</div>#}
+{#<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+{% load static %}
+
+<html>
+	<head>
+		<title>{% block title %}Home{% endblock %} | to do</title>
+		<!--<link rel="icon" href="imageset/favicon.png">-->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" type="image/png" href="{% static "favicon.png" %}"/>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="{% static "css/materialize.min.css" %}">
+		<link rel="stylesheet" href="{% static "css/style.css" %}">
+		<script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
+		<script src="{% static "js/materialize.min.js" %}"></script>
+        <script src="{% static '/js/validations.js' %}" type="text/javascript"></script>
+		<script src="{% static "js/script.js" %}"></script>
+    <style>
+        h6 {
+                color: #737373;
+        }
+    </style>
+
+	</head>
+
+	<body>
+
+		{% if messages %}
+			{% for message in messages %}
+					<script>
+						Materialize.toast('{{ message }}', 3000);
+					</script>
+			{% endfor %}
+		{% endif %}
+
+		<ul id="slide-out" class="side-nav fixed">
+			<li><div class="user-view">
+		      <div class="background">
+						<img src="{% static "index.jpeg" %}">
+		      </div>
+					<a href="/profile"><img class="circle center" src="{% static 'account.png' %}"></a>
+		      <a href="/profile"><span class="white-text name">{{request.user.username}}</span></a>
+		      <a href="/profile"><span class="white-text email">{{request.user.email}}</span></a>
+		    	</div>
+			</li>
+
+			<li><a class="waves-effect waves-grey" href="/admin/">Admin</a></li>
+			{% for item,url in menu.items %}
+				<li><a class="waves-effect waves-grey" href="{{url}}">{{item}}</a></li>
+			{% endfor %}
+			<li><div class="divider"></div></li>
+{#			<li><a class="subheader">Actions</a></li>#}
+			<li><a class="waves-effect" href="/ADD/">ADD ACTIONS</a></li>
+			<li><a class="waves-effect" href="/SHOW/">SHOW LIST</a></li>
+
+		</ul>
+
+		<main class="center-align">
+					<nav>
+			    	<div class="nav-wrapper blue-grey darken-3">
+							<a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+							<a href="#" class="brand-logo center">{% block heading %}to-do app{% endblock %}</a>
+						</div>
+					</nav>
+					<div id="body">
+						{% block body %}
+                            <table>
+                            <tr>
+                                <th>
+                                     <marquee>
+                      <font size="3" face="Arial">
+                        Welcome to the TO_do application
+                    </font></marquee>
+                                </th>
+                            </tr>
+                            </table>
+						{% endblock %}
+					</div>
+		</main>
+
+
+		<footer class="page-footer blue-grey darken-2">
+			<div class="container">
+
+      </div>
+  	</footer>
+
+
+	</body>
+</html>
